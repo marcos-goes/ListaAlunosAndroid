@@ -10,6 +10,11 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import java.util.List;
+
+import br.com.caelum.cadastro.dao.AlunoDao;
+import br.com.caelum.cadastro.modelo.Aluno;
+
 public class ListaAlunosActivity extends AppCompatActivity {
 
     private ListView listaAlunos;
@@ -18,18 +23,20 @@ public class ListaAlunosActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lista_alunos);
-
-        String[] alunos = {"Marcos", "Josefina", "Maria", "Ressonancio", "Jasmine", "Jurema", "Xurumelas"};
-
         this.listaAlunos = (ListView) findViewById(R.id.lista_alunos);
+
+        /*
+        String[] alunos = {"Marcos", "Josefina", "Maria", "Ressonancio", "Jasmine", "Jurema", "Xurumelas"};
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, alunos);
         this.listaAlunos.setAdapter(adapter);
+        */
+
 
         listaAlunos.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapter, View view, int pos, long id) {
-                String aluno = (String) adapter.getItemAtPosition(pos);
-                Toast.makeText(ListaAlunosActivity.this, aluno, Toast.LENGTH_SHORT).show();
+                Aluno aluno = (Aluno) adapter.getItemAtPosition(pos);
+                Toast.makeText(ListaAlunosActivity.this, aluno.toString(), Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -50,5 +57,20 @@ public class ListaAlunosActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+    }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+        carregaLista();
+    }
+
+    public void carregaLista(){
+        AlunoDao dao = new AlunoDao(this);
+        List<Aluno> lista = dao.getLista();
+        dao.close();
+
+        ArrayAdapter<Aluno> adapter = new ArrayAdapter<Aluno>(this, android.R.layout.simple_list_item_1, lista);
+        listaAlunos.setAdapter(adapter);
     }
 }

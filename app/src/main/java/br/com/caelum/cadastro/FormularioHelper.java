@@ -34,4 +34,12 @@ public class FormularioHelper {
         aluno.setEndereco(inputTelefone.getText().toString());
         return aluno;
     }
+
+    public boolean validaNome(){
+        return (inputNome != null && !inputNome.getText().toString().isEmpty());
+    }
+
+    public void mostraErro(){
+        inputNome.setError("Campo nome não pode ser vazio.");
+    }
 }

@@ -8,15 +8,20 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import br.com.caelum.cadastro.dao.AlunoDao;
+import br.com.caelum.cadastro.modelo.Aluno;
+
 public class FormularioActivity extends AppCompatActivity {
 
     private FormularioHelper helper;
+    private AlunoDao alunoDao;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_formulario);
         helper = new FormularioHelper(this);
+        alunoDao = new AlunoDao(this);
         /*
         Button botaoSalvar = (Button) findViewById(R.id.formulario_botao);
         botaoSalvar.setOnClickListener(new View.OnClickListener() {
@@ -42,8 +47,18 @@ public class FormularioActivity extends AppCompatActivity {
             case R.id.menu_formulario_ok:
                 //Toast.makeText(this, "Item de menu clicado para inserir Aluno...", Toast.LENGTH_SHORT).show();
 
-                String nomeAluno = helper.pegaAlunoDoFormulario().getNome();
-                Toast.makeText(this, nomeAluno + " adicionado.", Toast.LENGTH_SHORT).show();
+                if(helper.validaNome()){
+                    Aluno aluno = helper.pegaAlunoDoFormulario();
+
+                    Toast.makeText(this, aluno.getNome() + " adicionado.", Toast.LENGTH_SHORT).show();
+
+                    alunoDao.insere(aluno);
+                } else {
+
+                }
+
+
+
                 finish();
                 return false;
             default:
