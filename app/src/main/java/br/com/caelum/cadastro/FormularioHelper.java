@@ -31,8 +31,17 @@ public class FormularioHelper {
         aluno.setTelefone(inputTelefone.getText().toString());
         aluno.setSite(inputSite.getText().toString());
         aluno.setNota(Double.valueOf(ratingNota.getProgress()));
-        aluno.setEndereco(inputTelefone.getText().toString());
         return aluno;
+    }
+
+    public void colocaAlunoNoFormulario(Aluno aluno){
+        this.aluno = aluno;
+
+        inputNome.setText(aluno.getNome());
+        inputTelefone.setText(aluno.getTelefone());
+        inputEndereco.setText(aluno.getEndereco());
+        inputSite.setText(aluno.getSite());
+        ratingNota.setRating(aluno.getNota().longValue());
     }
 
     public boolean validaNome(){
@@ -41,5 +50,14 @@ public class FormularioHelper {
 
     public void mostraErro(){
         inputNome.setError("Campo nome não pode ser vazio.");
+    }
+
+
+    public Aluno getAluno() {
+        return aluno;
+    }
+
+    public void setAluno(Aluno aluno) {
+        this.aluno = aluno;
     }
 }

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto" >
+
+    <item
+        android:id="@+id/menu_contexto_ligar"
+        android:title="Ligar" />
+
+    <item
+        android:id="@+id/menu_contexto_sms"
+        android:title="Enviar SMS" />
+
+    <item
+        android:id="@+id/menu_contexto_mapa"
+        android:title="Achar no Mapa" />
+
+    <item
+        android:id="@+id/menu_contexto_site"
+        android:title="Navegar Site" />
+
+    <item
+        android:id="@+id/menu_contexto_deletar"
+        android:title="Excluir" />
+
+</menu>

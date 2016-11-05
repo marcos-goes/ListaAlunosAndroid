@@ -4,6 +4,9 @@ import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.ContextMenu;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -23,7 +26,9 @@ public class ListaAlunosActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lista_alunos);
+
         this.listaAlunos = (ListView) findViewById(R.id.lista_alunos);
+        registerForContextMenu(this.listaAlunos);
 
         /*
         String[] alunos = {"Marcos", "Josefina", "Maria", "Ressonancio", "Jasmine", "Jurema", "Xurumelas"};
@@ -36,7 +41,11 @@ public class ListaAlunosActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapter, View view, int pos, long id) {
                 Aluno aluno = (Aluno) adapter.getItemAtPosition(pos);
-                Toast.makeText(ListaAlunosActivity.this, aluno.toString(), Toast.LENGTH_SHORT).show();
+                //Toast.makeText(ListaAlunosActivity.this, aluno.toString(), Toast.LENGTH_SHORT).show();
+
+                Intent intentEditar = new Intent(ListaAlunosActivity.this, FormularioActivity.class);
+                intentEditar.putExtra(FormularioActivity.ALUNO_SELECIONADO, aluno);
+                startActivity(intentEditar);
             }
         });
 
@@ -63,6 +72,28 @@ public class ListaAlunosActivity extends AppCompatActivity {
     protected void onResume(){
         super.onResume();
         carregaLista();
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View view, ContextMenu.ContextMenuInfo menuInfo){
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
+        final Aluno alunoSelecionado = (Aluno) listaAlunos.getAdapter().getItem(info.position);
+
+        //getMenuInflater().inflate(R.menu.menu_contexto, menu);
+        //MenuItem itemDeletar = (MenuItem) findViewById(R.id.menu_contexto_deletar);
+        MenuItem itemDeletar = menu.add("Deletar");
+
+        itemDeletar.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                AlunoDao dao = new AlunoDao(ListaAlunosActivity.this);
+                dao.excluir(alunoSelecionado);
+                dao.close();
+                carregaLista();
+                return true;
+            }
+        });
+
     }
 
     public void carregaLista(){

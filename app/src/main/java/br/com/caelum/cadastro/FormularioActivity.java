@@ -1,5 +1,6 @@
 package br.com.caelum.cadastro;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -13,15 +14,21 @@ import br.com.caelum.cadastro.modelo.Aluno;
 
 public class FormularioActivity extends AppCompatActivity {
 
+    public static final String ALUNO_SELECIONADO = "alunoSelecionado";
     private FormularioHelper helper;
-    private AlunoDao alunoDao;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_formulario);
         helper = new FormularioHelper(this);
-        alunoDao = new AlunoDao(this);
+
+        Intent intent = getIntent();
+        Aluno aluno = (Aluno) intent.getSerializableExtra(ALUNO_SELECIONADO);
+
+        if(aluno != null)
+            helper.colocaAlunoNoFormulario(aluno);
+
         /*
         Button botaoSalvar = (Button) findViewById(R.id.formulario_botao);
         botaoSalvar.setOnClickListener(new View.OnClickListener() {
@@ -40,7 +47,6 @@ public class FormularioActivity extends AppCompatActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()){
@@ -48,19 +54,23 @@ public class FormularioActivity extends AppCompatActivity {
                 //Toast.makeText(this, "Item de menu clicado para inserir Aluno...", Toast.LENGTH_SHORT).show();
 
                 if(helper.validaNome()){
+                    AlunoDao alunoDao = new AlunoDao(this);
                     Aluno aluno = helper.pegaAlunoDoFormulario();
 
-                    Toast.makeText(this, aluno.getNome() + " adicionado.", Toast.LENGTH_SHORT).show();
-
-                    alunoDao.insere(aluno);
+                    if(aluno.getId() == null){
+                        alunoDao.insere(aluno);
+                        Toast.makeText(this, aluno.getNome() + " adicionado(a).", Toast.LENGTH_SHORT).show();
+                    } else {
+                        alunoDao.altera(aluno);
+                        Toast.makeText(this, aluno.getNome() + " alterado(a).", Toast.LENGTH_SHORT).show();
+                    }
+                    alunoDao.close();
                 } else {
-
+                    helper.mostraErro();
                 }
 
-
-
                 finish();
-                return false;
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
