@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -9,11 +10,16 @@
         android:id="@+id/lista_alunos" />
 
     <android.support.design.widget.FloatingActionButton
+        android:id="@+id/lista_alunos_floating_button"
         android:layout_width="56dp"
         android:layout_height="56dp"
         android:elevation="10dp"
         android:layout_marginBottom="16dp"
-        android:layout_gravity="bottom/right" />
+        android:layout_marginRight="16dp"
+        android:background="@drawable/fundo"
+        android:layout_gravity="bottom"
+
+        />
 
 
 </android.support.design.widget.CoordinatorLayout>
