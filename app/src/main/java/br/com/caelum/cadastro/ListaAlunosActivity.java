@@ -1,6 +1,7 @@
 package br.com.caelum.cadastro;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -17,17 +18,51 @@ import java.util.List;
 
 import br.com.caelum.cadastro.dao.AlunoDao;
 import br.com.caelum.cadastro.modelo.Aluno;
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+import butterknife.OnItemClick;
+import butterknife.OnItemLongClick;
 
 public class ListaAlunosActivity extends AppCompatActivity {
 
-    private ListView listaAlunos;
+    @BindView(R.id.lista_alunos)
+    ListView listaAlunos;
+
+    @BindView(R.id.lista_alunos_floating_button)
+    FloatingActionButton floatingButton;
+
+    @OnItemClick(R.id.lista_alunos)
+    protected void cliqueItemLista(int pos){
+        Aluno aluno = (Aluno) listaAlunos.getItemAtPosition(pos);
+        Intent intentEditar = new Intent(ListaAlunosActivity.this, FormularioActivity.class);
+        intentEditar.putExtra(FormularioActivity.ALUNO_SELECIONADO, aluno);
+        startActivity(intentEditar);
+    }
+
+    @OnItemLongClick(R.id.lista_alunos)
+    protected boolean cliqueItemLongoLista(int pos){
+        Toast.makeText(ListaAlunosActivity.this, "Posicao: " + String.valueOf(pos), Toast.LENGTH_SHORT).show();
+        return false;
+    }
+
+    @OnClick(R.id.lista_alunos_floating_button)
+    protected void cliqueFloating(View view) {
+        //Toast.makeText(ListaAlunosActivity.this, "Clicado no Floating...", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(ListaAlunosActivity.this, FormularioActivity.class);
+        startActivity(intent);
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lista_alunos);
+        ButterKnife.bind(this);
 
-        this.listaAlunos = (ListView) findViewById(R.id.lista_alunos);
+        Permissao.fazPermissao(this);
+
+        //this.listaAlunos = (ListView) findViewById(R.id.lista_alunos);
         registerForContextMenu(this.listaAlunos);
 
         /*
@@ -36,7 +71,7 @@ public class ListaAlunosActivity extends AppCompatActivity {
         this.listaAlunos.setAdapter(adapter);
         */
 
-
+        /*
         listaAlunos.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapter, View view, int pos, long id) {
@@ -49,6 +84,7 @@ public class ListaAlunosActivity extends AppCompatActivity {
             }
         });
 
+
         listaAlunos.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> adapter, View view, int pos, long id) {
@@ -56,6 +92,7 @@ public class ListaAlunosActivity extends AppCompatActivity {
                 return false;
             }
         });
+
 
         FloatingActionButton floatingButton = (FloatingActionButton) findViewById(R.id.lista_alunos_floating_button);
         floatingButton.setOnClickListener(new View.OnClickListener() {
@@ -66,6 +103,7 @@ public class ListaAlunosActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+        */
     }
 
     @Override
@@ -82,7 +120,6 @@ public class ListaAlunosActivity extends AppCompatActivity {
         //getMenuInflater().inflate(R.menu.menu_contexto, menu);
         //MenuItem itemDeletar = (MenuItem) findViewById(R.id.menu_contexto_deletar);
         MenuItem itemDeletar = menu.add("Deletar");
-
         itemDeletar.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
@@ -93,6 +130,41 @@ public class ListaAlunosActivity extends AppCompatActivity {
                 return true;
             }
         });
+
+        MenuItem itemLigar = menu.add("Ligar");
+        Intent intentLigar = new Intent(Intent.ACTION_CALL);
+        intentLigar.setData(Uri.parse("tel:" + alunoSelecionado.getTelefone()));
+        itemLigar.setIntent(intentLigar);
+
+        MenuItem itemSms = menu.add("SMS");
+        Intent intentSms = new Intent(Intent.ACTION_VIEW);
+        intentSms.setData(Uri.parse("sms:" + alunoSelecionado.getTelefone()));
+        intentSms.putExtra("sms_body", "pedaço da mensagem...");
+        itemSms.setIntent(intentSms);
+
+        MenuItem itemMapa = menu.add("Achar no Mapa");
+        Intent intentMapa = new Intent(Intent.ACTION_VIEW);
+        intentMapa.setData(Uri.parse("geo:-23.5918659,-46.6362278?z=15&q="));
+        itemMapa.setIntent(intentMapa);
+
+        MenuItem itemSite = menu.add("Navegar no Site");
+        Intent intentSite = new Intent(Intent.ACTION_VIEW);
+        String site = alunoSelecionado.getSite();
+        if(!site.startsWith("http://")){
+            site = "http://" + site;
+        }
+        intentSite.setData(Uri.parse(site));
+        itemSite.setIntent(intentSite);
+        /*
+        itemLigar.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                Intent ligacao = new Intent(Intent.ACTION_CALL);
+                ligacao.setData(Uri.parse("tel:" + alunoSelecionado.getTelefone()));
+                startActivity(ligacao);
+            }
+        });
+        */
 
     }
 

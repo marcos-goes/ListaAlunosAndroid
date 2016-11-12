@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -7,6 +8,33 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
+
+        <android.support.design.widget.CoordinatorLayout
+            android:layout_width="match_parent"
+            android:layout_height="235dp">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:id="@+id/formulario_foto"
+                android:background="#428949"
+                android:src="@drawable/ic_no_image"
+                />
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/formulario_foto_button"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:elevation="10dp"
+                android:layout_marginBottom="16dp"
+                android:layout_marginRight="16dp"
+                android:src="@drawable/ic_camera"
+                android:layout_gravity="bottom|right"
+                />
+
+
+        </android.support.design.widget.CoordinatorLayout>
+
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
@@ -61,12 +89,12 @@
             android:id="@+id/formulario_rating"
             android:numStars="5"/>
 
-        <SeekBar
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:max="10"
-            android:id="@+id/formulario_seek"/>
+        <!--<SeekBar-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_gravity="center_horizontal"-->
+            <!--android:max="10"-->
+            <!--android:id="@+id/formulario_seek"/>-->
 <!--
         <Button
             android:layout_width="match_parent"
