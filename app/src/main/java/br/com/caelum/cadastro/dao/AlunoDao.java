@@ -31,7 +31,8 @@ public class AlunoDao extends SQLiteOpenHelper{
                     + " telefone TEXT, "
                     + " endereco TEXT, "
                     + " site TEXT, "
-                    + " nota REAL);";
+                    + " nota REAL, "
+                    + " foto TEXT);";
         db.execSQL(sql);
         //db.close();
     }
@@ -43,6 +44,16 @@ public class AlunoDao extends SQLiteOpenHelper{
         db.execSQL(sql);
         //onCreate(db);
         //db.close();
+    }
+
+    public boolean isAlunoByTelefone(String telefone){
+        String[] parametros = {telefone};
+        Cursor rawQuery = getReadableDatabase().rawQuery("SELECT 1 FROM " + TABELA + " WHERE telefone = ?", parametros);
+
+        int total = rawQuery.getCount();
+        rawQuery.close();
+
+        return (total > 0);
     }
 
     private ContentValues toContentValues(Aluno aluno){

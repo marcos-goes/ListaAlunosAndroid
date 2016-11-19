@@ -1,6 +1,9 @@
 package br.com.caelum.cadastro;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.net.Uri;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -14,10 +17,15 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import java.io.IOException;
 import java.util.List;
 
+import br.com.caelum.cadastro.adapter.ListaAlunosAdapter;
+import br.com.caelum.cadastro.converter.AlunoConverter;
 import br.com.caelum.cadastro.dao.AlunoDao;
 import br.com.caelum.cadastro.modelo.Aluno;
+import br.com.caelum.cadastro.support.WebClient;
+import br.com.caelum.task.EnviaAlunosTask;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -69,9 +77,7 @@ public class ListaAlunosActivity extends AppCompatActivity {
         String[] alunos = {"Marcos", "Josefina", "Maria", "Ressonancio", "Jasmine", "Jurema", "Xurumelas"};
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, alunos);
         this.listaAlunos.setAdapter(adapter);
-        */
 
-        /*
         listaAlunos.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapter, View view, int pos, long id) {
@@ -104,6 +110,8 @@ public class ListaAlunosActivity extends AppCompatActivity {
             }
         });
         */
+
+        //registerReceiver(bateria, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
     }
 
     @Override
@@ -173,7 +181,52 @@ public class ListaAlunosActivity extends AppCompatActivity {
         List<Aluno> lista = dao.getLista();
         dao.close();
 
-        ArrayAdapter<Aluno> adapter = new ArrayAdapter<Aluno>(this, android.R.layout.simple_list_item_1, lista);
+        //ArrayAdapter<Aluno> adapter = new ArrayAdapter<Aluno>(this, android.R.layout.simple_list_item_1, lista);
+        ListaAlunosAdapter adapter = new ListaAlunosAdapter(this, lista);
         listaAlunos.setAdapter(adapter);
+    }
+
+    private BroadcastReceiver bateria = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            int valor = intent.getIntExtra("level", 0);
+            Toast.makeText(context, valor + "%", Toast.LENGTH_SHORT).show();
+        }
+    };
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu){
+        getMenuInflater().inflate(R.menu.menu_lista_alunos, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        try{
+            switch(item.getItemId()){
+
+                case R.id.menu_enviar_notas:
+
+                    /*
+                    AlunoDao dao = new AlunoDao(this);
+                    List<Aluno> alunos = dao.getLista();
+                    dao.close();
+
+                    String json = new AlunoConverter().toJSON(alunos);
+                    WebClient client = new WebClient();
+                    String jsonResposta = client.post(json);
+                    Toast.makeText(this, jsonResposta, Toast.LENGTH_LONG).show();
+                    */
+
+                    new EnviaAlunosTask(this).execute();
+
+                    return true;
+            }
+        //} catch(IOException ex){
+        //    Toast.makeText(this, "Deu um IOException... Sorry!", Toast.LENGTH_LONG).show();
+        } catch(Exception ex){
+            Toast.makeText(this, "Deu um erro cabuloso... Impossivel de tratar!", Toast.LENGTH_LONG).show();
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
