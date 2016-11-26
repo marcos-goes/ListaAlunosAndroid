@@ -206,7 +206,6 @@ public class ListaAlunosActivity extends AppCompatActivity {
             switch(item.getItemId()){
 
                 case R.id.menu_enviar_notas:
-
                     /*
                     AlunoDao dao = new AlunoDao(this);
                     List<Aluno> alunos = dao.getLista();
@@ -217,15 +216,24 @@ public class ListaAlunosActivity extends AppCompatActivity {
                     String jsonResposta = client.post(json);
                     Toast.makeText(this, jsonResposta, Toast.LENGTH_LONG).show();
                     */
-
                     new EnviaAlunosTask(this).execute();
+                    return true;
 
+                case R.id.menu_receber_provas:
+                    Intent provas = new Intent(this, ProvasActivity.class);
+                    startActivity(provas);
+                    return true;
+
+                case R.id.menu_mapa:
+                    Intent mapa = new Intent(this, MostraAlunoActivity.class);
+                    startActivity(mapa);
                     return true;
             }
         //} catch(IOException ex){
         //    Toast.makeText(this, "Deu um IOException... Sorry!", Toast.LENGTH_LONG).show();
         } catch(Exception ex){
             Toast.makeText(this, "Deu um erro cabuloso... Impossivel de tratar!", Toast.LENGTH_LONG).show();
+            ex.printStackTrace();
         }
         return super.onOptionsItemSelected(item);
     }
